@@ -10,10 +10,17 @@ pico_sdk_init()
 add_executable(udelay
   udelay.c
   read_buf.pio
+  modulate.pio
 )
 
 pico_generate_pio_header(udelay
-  ${CMAKE_CURRENT_LIST_DIR}/read_buf.pio)
+  ${CMAKE_CURRENT_LIST_DIR}/read_buf.pio
+)
+
+pico_generate_pio_header(udelay
+  ${CMAKE_CURRENT_LIST_DIR}/modulate.pio
+)
+
 
 pico_enable_stdio_usb(udelay 1)
 pico_enable_stdio_uart(udelay 0)

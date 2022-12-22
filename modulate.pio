@@ -1,0 +1,33 @@
+.program pio_modulate
+
+.wrap_target
+  mov pins, !x
+  mov x, pins
+  in x, 1
+.wrap
+
+% c-sdk {
+static inline void pio_modulate_program_init(
+  PIO pio,
+  uint sm,
+  uint offset,
+  uint in_pin,
+  uint out_pin,
+  float clk_div
+) {
+  const uint shift_tresh = 32;
+  pio_gpio_init(pio, out_pin);
+  pio_gpio_init(pio, in_pin);
+
+  pio_sm_set_consecutive_pindirs(pio, sm, out_pin, 1, true);
+  pio_sm_set_consecutive_pindirs(pio, sm, in_pin, 1, false);
+
+  pio_sm_config c = pio_modulate_program_get_default_config(offset);
+  sm_config_set_out_pins(&c, out_pin, 1);
+  sm_config_set_in_pins(&c, in_pin);
+  sm_config_set_clkdiv(&c, clk_div);
+  sm_config_set_in_shift(&c, true, true, shift_tresh);
+  pio_sm_init(pio, sm, offset, &c);
+}
+%}
+
