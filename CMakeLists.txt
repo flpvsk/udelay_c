@@ -9,11 +9,19 @@ pico_sdk_init()
 
 add_executable(udelay
   udelay.c
+  read_buf.pio
 )
+
+pico_generate_pio_header(udelay
+  ${CMAKE_CURRENT_LIST_DIR}/read_buf.pio)
 
 pico_enable_stdio_usb(udelay 1)
 pico_enable_stdio_uart(udelay 0)
 
 pico_add_extra_outputs(udelay)
 
-target_link_libraries(udelay pico_stdlib hardware_dma)
+target_link_libraries(udelay
+  pico_stdlib
+  hardware_dma
+  hardware_pio
+)

@@ -1,0 +1,25 @@
+.program pio_read_buf
+
+.wrap_target
+  out pins, 1 [2]
+.wrap
+
+% c-sdk {
+static inline void pio_read_buf_program_init(
+  PIO pio,
+  uint sm,
+  uint offset,
+  uint pin,
+  float clk_div
+) {
+  const uint shift_tresh = 32;
+
+  pio_gpio_init(pio, pin);
+  pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+  pio_sm_config c = pio_read_buf_program_get_default_config(offset);
+  sm_config_set_out_pins(&c, pin, 1);
+  sm_config_set_clkdiv(&c, clk_div);
+  sm_config_set_out_shift(&c, true, true, shift_tresh);
+  pio_sm_init(pio, sm, offset, &c);
+}
+%}
